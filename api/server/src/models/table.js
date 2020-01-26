@@ -1,10 +1,10 @@
 'use strict';
 module.exports = (sequelize, DataTypes) => {
-  const Tablet = sequelize.define('Tablet', {
+  const Table = sequelize.define('Table', {
     number: DataTypes.STRING
   }, {});
-  Tablet.associate = function(models) {
+  Table.associate = function(models) {
     // associations can be defined here
   };
-  return Tablet;
+  return Table;
 };

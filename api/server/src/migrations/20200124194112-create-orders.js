@@ -1,7 +1,7 @@
 'use strict';
 module.exports = {
-  up: (queryInterface, Sequelize) => {
-    return queryInterface.createTable('orders', {
+  up: async (queryInterface, Sequelize) => {
+    await queryInterface.createTable('orders', {
       id: {
         allowNull: false,
         autoIncrement: true,
@@ -9,10 +9,15 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       table_id: {
-        type: Sequelize.STRING(255)
+        type: Sequelize.INTEGER,
+        references: {
+          model: 'tables',
+          key: 'id',
+        }
       },
       status: {
-        type: Sequelize.ENUM("pending")
+        type: Sequelize.ENUM(["pending", "done", "delivered"]),
+        defaultValue: "pending",
       },
       createdAt: {
         allowNull: false,
@@ -23,8 +28,34 @@ module.exports = {
         type: Sequelize.DATE
       }
     });
+
+    await queryInterface.createTable('order_has_products', {
+      id: {
+        allowNull: false,
+        autoIncrement: true,
+        primaryKey: true,
+        type: Sequelize.INTEGER
+      },
+      order_id: {
+        allowNull: false,
+        type: Sequelize.INTEGER,
+        references: {
+          model: 'orders',
+          key: 'id',
+        }
+      },
+      product_id: {
+        allowNull: false,
+        type: Sequelize.INTEGER,
+        references: {
+          model: 'products',
+          key: 'id',
+        }
+      },
+    });
   },
-  down: (queryInterface, Sequelize) => {
-    return queryInterface.dropTable('orders');
+  down: async (queryInterface, Sequelize) => {
+    await queryInterface.dropTable('order_has_products');
+    await queryInterface.dropTable('orders');
   }
 };

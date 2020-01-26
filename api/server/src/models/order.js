@@ -2,10 +2,16 @@
 module.exports = (sequelize, DataTypes) => {
   const Order = sequelize.define('Order', {
     table_id: DataTypes.STRING,
-    status: DataTypes.ENUM
+    status: DataTypes.ENUM(["pending", "done", "delivered"])
   }, {});
-  Orders.associate = function(models) {
+  Order.associate = function(models) {
     Order.hasOne(models.Table);
+    Order.belongsToMany(models.Product, {
+      through: 'order_has_products',
+      foreignKey: 'order_id',
+      otherKey: 'product_id',
+      as: 'products',
+    });
   };
   return Order;
 };
