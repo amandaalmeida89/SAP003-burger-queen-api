@@ -38,6 +38,7 @@ module.exports = {
       },
       order_id: {
         allowNull: false,
+        onDelete: 'CASCADE',
         type: Sequelize.INTEGER,
         references: {
           model: 'orders',

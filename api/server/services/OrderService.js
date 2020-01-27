@@ -3,15 +3,22 @@ import database from '../src/models'
 class OrderService {
   static async getAllOrders() {
     try {
-      return await database.Order.findAll()
+      return await database.Order.findAll({
+        include: [
+          { model: database.Table, as: 'table' },
+          { model: database.Product, as: 'products', duplicating: true }
+        ],
+      })
     } catch (error) {
+      console.log(error);
       throw error
     }
   }
 
   static async addOrder(newOrder) {
     try {
-      return await database.Order.create(newOrder)
+      const order = await database.Order.create({ table_id: newOrder.table_id });
+      await order.addProducts(newOrder.products);
     } catch (error) {
       throw error
     }
