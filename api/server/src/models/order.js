@@ -1,7 +1,7 @@
 'use strict';
 module.exports = (sequelize, DataTypes) => {
   const Order = sequelize.define('Order', {
-    table_id: DataTypes.STRING,
+    table_id: DataTypes.INTEGER,
     status: DataTypes.ENUM(["pending", "done", "delivered"])
   }, {
     tableName: 'orders',
@@ -11,12 +11,10 @@ module.exports = (sequelize, DataTypes) => {
       foreignKey: 'table_id',
       as: 'table',
     });
-    Order.belongsToMany(models.Product, {
-      through: 'order_has_products',
+    Order.hasMany(models.OrderItem, {
       foreignKey: 'order_id',
-      timestamps: false,
       otherKey: 'product_id',
-      as: 'products',
+      as: 'items',
     });
   };
   return Order;

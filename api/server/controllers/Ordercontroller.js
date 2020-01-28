@@ -21,7 +21,7 @@ class OrderController {
 
   static async addOrder(req, res) {
     console.log(req.body);
-    if (!req.body.table_id || !req.body.products) {
+    if (!req.body.table_id || !req.body.items) {
       util.setError(400, 'Please provide complete details')
       return util.send(res)
     }

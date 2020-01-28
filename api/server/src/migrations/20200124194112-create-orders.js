@@ -29,7 +29,7 @@ module.exports = {
       }
     });
 
-    await queryInterface.createTable('order_has_products', {
+    await queryInterface.createTable('order_items', {
       id: {
         allowNull: false,
         autoIncrement: true,
@@ -53,10 +53,18 @@ module.exports = {
           key: 'id',
         }
       },
+      createdAt: {
+        allowNull: false,
+        type: Sequelize.DATE
+      },
+      updatedAt: {
+        allowNull: false,
+        type: Sequelize.DATE
+      }
     });
   },
   down: async (queryInterface, Sequelize) => {
-    await queryInterface.dropTable('order_has_products');
+    await queryInterface.dropTable('order_items');
     await queryInterface.dropTable('orders');
   }
 };
