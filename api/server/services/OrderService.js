@@ -3,14 +3,7 @@ import database from '../src/models'
 class OrderService {
   static async getAllOrders() {
     try {
-      return await database.Order.findAll({
-        include: [
-          { model: database.Table, as: 'table' },
-          { model: database.OrderItem, as: 'items', include: [
-            { model: database.Product, as: 'product' }
-          ] }
-        ],
-      })
+      return await database.Order.findAll()
     } catch (error) {
       console.log(error);
       throw error

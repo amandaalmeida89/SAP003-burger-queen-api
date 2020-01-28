@@ -1,20 +1,20 @@
 'use strict';
 module.exports = {
   up: (queryInterface, Sequelize) => {
-   return queryInterface.createTable('Orders', {
+    return queryInterface.createTable('OrderItems', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      TableId: {
+      OrderId: {
         type: Sequelize.INTEGER,
-        references: { model: 'tables', key: 'id'}
+        references: { model:'Orders', key:'id' }
       },
-      status: {
-        type: Sequelize.ENUM(["pending", "done", "delivered"]),
-        defaultValue: "pending",
+      ProductId: {
+        type: Sequelize.INTEGER,
+        references: { model:'Products', key:'id' }
       },
       createdAt: {
         allowNull: false,
@@ -27,6 +27,6 @@ module.exports = {
     });
   },
   down: (queryInterface, Sequelize) => {
-   return queryInterface.dropTable('Orders');
+    return queryInterface.dropTable('OrderItems');
   }
 };

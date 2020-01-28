@@ -7,7 +7,6 @@ module.exports = (sequelize, DataTypes) => {
     is_breakfast: DataTypes.BOOLEAN,
     category: DataTypes.STRING
   }, {
-    tableName: 'products'
   });
   Product.associate = function(models) {
     // associations can be defined here
