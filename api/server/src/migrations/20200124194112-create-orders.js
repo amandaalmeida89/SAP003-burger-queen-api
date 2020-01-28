@@ -10,7 +10,7 @@ module.exports = {
       },
       TableId: {
         type: Sequelize.INTEGER,
-        references: { model: 'tables', key: 'id'}
+        references: { model: 'Tables', key: 'id'}
       },
       status: {
         type: Sequelize.ENUM(["pending", "done", "delivered"]),

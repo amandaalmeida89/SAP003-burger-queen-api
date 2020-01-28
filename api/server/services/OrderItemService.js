@@ -13,10 +13,7 @@ class OrderItemService {
   static async addOrderItem(newOrderItem) {
     try {
       return database.OrderItem.create(
-        newOrderItem, 
-        {
-          include: [{ model: database.OrderItemItem, as: 'items'}]
-        }
+        newOrderItem
       );
     } catch (error) {
       throw error
