@@ -4,8 +4,11 @@ module.exports = (sequelize, DataTypes) => {
     TableId: DataTypes.INTEGER,
     status: DataTypes.ENUM(["pending", "done", "delivered"])
   }, {
+    deletedAt: 'deletedAt',
+    paranoid: true,
+    timestamps: true,
   });
-  Order.associate = function(models) {
+  Order.associate = function (models) {
     Order.belongsTo(models.Table);
     Order.hasMany(models.OrderItem);
   };
