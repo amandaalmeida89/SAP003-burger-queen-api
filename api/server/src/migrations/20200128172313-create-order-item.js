@@ -16,6 +16,9 @@ module.exports = {
         type: Sequelize.INTEGER,
         references: { model:'Products', key:'id' }
       },
+      extras: {
+        type: Sequelize.STRING,
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE
