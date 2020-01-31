@@ -21,7 +21,7 @@ class ProductController {
 
   static async addProduct(req, res) {
     console.log(req.body);
-    if (!req.body.name || !req.body.price || !req.body.image || !req.body.is_breakfast || !req.body.category) {
+    if (!req.body.name || !req.body.price || !req.body.image || (req.body.is_breakfast == null) || !req.body.category) {
       util.setError(400, 'Please provide complete details')
       return util.send(res)
     }

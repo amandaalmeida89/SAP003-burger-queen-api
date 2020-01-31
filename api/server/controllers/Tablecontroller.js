@@ -21,7 +21,7 @@ class TableController {
 
   static async addTable(req, res) {
     console.log(req.body.number)
-    if (!req.body.TableId) {
+    if (!req.body.number) {
       util.setError(400, 'Please provide complete details')
       return util.send(res)
     }
