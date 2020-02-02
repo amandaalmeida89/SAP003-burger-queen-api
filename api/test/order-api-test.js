@@ -6,31 +6,30 @@ chai.use(chatHttp)
 const { expect } = chai
 
 describe('Testing the order endpoints:', () => {
-  it('It should create a order', (done) => {
+
+  it('It should create a order', async () => {
     const table = {
       number: "1"
-    }
-    chai.request(app)
+    };
+
+    await chai.request(app)
       .post('/api/tables')
       .set('Accept', 'application/json')
-      .send(table)
-    done()
+      .send(table);
+
     const order = {
       TableId: 1,
-    }
-    chai.request(app)
+    };
+
+    const res = await chai.request(app)
       .post('/api/orders')
       .set('Accept', 'application/json')
-      .send(order)
-      .end((err, res) => {
-        expect(res.status).to.equal(201)
-        expect(res.body.data).to.include({
-          id: 1,
-          TableId: 1,
-        })
-        done()
-      })
-  })
+      .send(order);
+
+    expect(res.status).to.equal(201);
+    expect(res.body.data).to.include({ id: 1, TableId: 1 });
+
+  });
 
   it('It should not create a order with incomplete parameters', (done) => {
     const order = {
@@ -45,285 +44,267 @@ describe('Testing the order endpoints:', () => {
       })
   })
 
-  it('It should get all orders', (done) => {
-    const table = {
-      number: "1"
-    }
-    chai.request(app)
-      .post('/api/tables')
-      .set('Accept', 'application/json')
-      .send(table)
-    done()
-    chai.request(app)
-      .get('/api/orders')
-      .set('Accept', 'application/json')
-      .end((err, res) => {
-        expect(res.status).to.equal(200)
-        res.body.data[0].should.have.property('id')
-        res.body.data[0].should.have.property('TableId')
-        done()
-      })
-  })
+  it('It should get all orders', async () => {
 
-  it('It should get a particular order', (done) => {
     const table = {
       number: "1"
     }
-    chai.request(app)
+
+    await chai.request(app)
       .post('/api/tables')
       .set('Accept', 'application/json')
       .send(table)
-    done()
-    chai.request(app)
+
+    const res = await chai.request(app)
+      .get('/api/orders')
+      .set('Accept', 'application/json');
+
+    expect(res.status).to.equal(200);
+    res.body.data[0].should.have.property('id');
+    res.body.data[0].should.have.property('TableId');
+
+  });
+
+  it('It should get a particular order', async () => {
+    const table = {
+      number: "1"
+    }
+    await chai.request(app)
+      .post('/api/tables')
+      .set('Accept', 'application/json')
+      .send(table)
+
     const order = {
       TableId: 1,
     }
+    await chai.request(app)
       .post('/api/orders')
       .set('Accept', 'application/json')
       .send(order)
-    done()
-    chai.request(app)
+
     const orderId = 1
+    const res = await chai.request(app)
       .get(`/api/orders/${orderId}`)
-      .set('Accept', 'application/json')
-      .end((err, res) => {
-        expect(res.status).to.equal(200)
-        res.body.data[0].should.have.property('id')
-        res.body.data[0].should.have.property('TableId')
-        done()
-      })
+      .set('Accept', 'application/json');
+
+    expect(res.status).to.equal(200)
+    res.body.data.should.have.property('id')
+    res.body.data.should.have.property('TableId')
+
   })
 
-  // it('It should not get a particular order with invalid id', (done) => {
-  //   const table = {
-  //     number: "1"
-  //   }
-  //   chai.request(app)
-  //     .post('/api/tables')
-  //     .set('Accept', 'application/json')
-  //     .send(table)
-  //   done()
-  //   const order = {
-  //     TableId: 1
-  //   }
-  //   chai.request(app)
-  //     .post('/api/orders')
-  //     .set('Accept', 'application/json')
-  //     .send(order)
-  //   done()
-  //   chai.request(app)
-  //   const orderId = 8888
-  //     .get(`/api/orders/${orderId}`)
-  //     .set('Accept', 'application/json')
-  //     .end((err, res) => {
-  //       expect(res.status).to.equal(404)
-  //       res.body.should.have.property('message')
-  //         .eql(`Cannot find order with the id ${orderId}`)
-  //       done()
-  //     })
-  // })
+  it('It should not get a particular order with invalid id', async () => {
+    const table = {
+      number: "1"
+    }
+    await chai.request(app)
+      .post('/api/tables')
+      .set('Accept', 'application/json')
+      .send(table)
 
-  it('It should not get a particular order with non-numeric id', (done) => {
+    const order = {
+      TableId: 1
+    }
+
+    await chai.request(app)
+      .post('/api/orders')
+      .set('Accept', 'application/json')
+      .send(order)
+
+    const orderId = 8888
+
+    const res = await chai.request(app)
+      .get(`/api/orders/${orderId}`)
+      .set('Accept', 'application/json')
+
+    expect(res.status).to.equal(404)
+    res.body.should.have.property('message')
+      .eql(`Cannot find Order with the id ${orderId}`)
+
+  })
+
+  it('It should not get a particular order with non-numeric id', async () => {
     const table = {
       number: "2"
     }
-    chai.request(app)
+
+    await chai.request(app)
       .post('/api/tables')
       .set('Accept', 'application/json')
       .send(table)
-    done()
-    chai.request(app)
     const order = {
       TableId: 2,
     }
+
+    await chai.request(app)
       .post('/api/orders')
       .set('Accept', 'application/json')
       .send(order)
-    done()
-    chai.request(app)
-    const orderId = aaa
+
+    const orderId = 'aaa';
+
+    const res = await chai.request(app)
       .get(`/api/orders/${orderId}`)
       .set('Accept', 'application/json')
-      .end((err, res) => {
-        expect(res.status).to.equal(400)
-        res.body.should.have.property('message')
-          .eql('Please input a valid numeric value')
-        done()
-      })
+
+    expect(res.status).to.equal(400)
+    res.body.should.have.property('message')
+      .eql('Please input a valid numeric value')
+
   })
 
-  // it('It should update a order', (done) => {
-  //   const table = {
-  //     number: "2"
-  //   }
-  //   chai.request(app)
-  //     .post('/api/tables')
-  //     .set('Accept', 'application/json')
-  //     .send(table)
-  //   done()
-  //   chai.request(app)
-  //   const order = {
-  //     TableId: 2,
-  //   }
-  //     .post('/api/orders')
-  //     .set('Accept', 'application/json')
-  //     .send(order)
-  //   done()
-  //   const updatedorder = {
-  //     id: orderId,
-  //     TableId: 3,
-  //   }
-  //   chai.request(app)
-  //   const orderId = 1
-  //     .put(`/api/orders/${orderId}`)
-  //     .set('Accept', 'application/json')
-  //     .send(updatedorder)
-  //     .end((err, res) => {
-  //       expect(res.status).to.equal(200)
-  //       expect(res.body.data.id).equal(updatedorder.id)
-  //       expect(res.body.data.TableId).equal(updatedorder.TableId)
-  //       done()
-  //     })
-  // })
-
-  it('It should not update a order with invalid id', (done) => {
+  it('It should update a order', async () => {
     const table = {
-      number: "5"
+      number: "2"
     }
-    chai.request(app)
+
+    await chai.request(app)
       .post('/api/tables')
       .set('Accept', 'application/json')
       .send(table)
-    done()
-    chai.request(app)
+
     const order = {
-      TableId: 5,
+      TableId: 2,
     }
+    await chai.request(app)
       .post('/api/orders')
       .set('Accept', 'application/json')
       .send(order)
-    done()
     const updatedorder = {
+      id: orderId,
       TableId: 3,
     }
-    chai.request(app)
-    const orderId = 9999
+    const orderId = 1
+
+    const res = await chai.request(app)
       .put(`/api/orders/${orderId}`)
       .set('Accept', 'application/json')
       .send(updatedorder)
-      .end((err, res) => {
-        expect(res.status).to.equal(404)
-        res.body.should.have.property('message')
-          .eql(`Cannot find order with the id: ${orderId}`)
-        done()
-      })
+
+    expect(res.status).to.equal(200)
+    expect(res.body.data.id).equal(updatedorder.id)
+    expect(res.body.data.TableId).equal(updatedorder.TableId)
   })
 
-  // it('It should not update a order with non-numeric id value', (done) => {
-  //   const table = {
-  //     number: "5"
-  //   }
-  //   chai.request(app)
-  //     .post('/api/tables')
-  //     .set('Accept', 'application/json')
-  //     .send(table)
-  //   done()
-  //   chai.request(app)
-  //   const order = {
-  //     TableId: 1,
-  //   }
-  //     .post('/api/orders')
-  //     .set('Accept', 'application/json')
-  //     .send(order)
-  //   done()
-  //   const updatedorder = {
-  //     id: orderId,
-  //     TableId: 4,
-  //   }
-  //   chai.request(app)
-  //   const orderId = ggg
-  //     .put(`/api/orders/${orderId}`)
-  //     .set('Accept', 'application/json')
-  //     .send(updatedorder)
-  //     .end((err, res) => {
-  //       expect(res.status).to.equal(400)
-  //       res.body.should.have.property('message')
-  //         .eql('Please input a valid numeric value')
-  //       done()
-  //     })
-  // })
+  it('It should not update a order with invalid id', async () => {
+    const table = {
+      number: "5"
+    }
+    await chai.request(app)
+      .post('/api/tables')
+      .set('Accept', 'application/json')
+      .send(table)
 
-  // it('It should delete a order', (done) => {
-  //   const table = {
-  //     number: "2"
-  //   }
-  //   chai.request(app)
-  //     .post('/api/tables')
-  //     .set('Accept', 'application/json')
-  //     .send(table)
-  //   done()
-  //   const order = {
-  //     TableId: 1,
-  //   }
-  //   chai.request(app)
-  //     .post('/api/orders')
-  //     .set('Accept', 'application/json')
-  //     .send(order)
-  //   done()
-  //   const deleteorder = {
-  //     id: orderId,
-  //     TableId: 1,
-  //   }
-  //   chai.request(app)
-  //   const orderId = 1
-  //     .delete(`/api/orders/${orderId}`)
-  //     .set('Accept', 'application/json')
-  //     .send(deleteorder)
-  //     .end((err, res) => {
-  //       expect(res.status).to.equal(200)
-  //       expect(res.body.data.deletedAt).equal(deleteorder.deletedAt)
-  //       done()
-  //     })
-  // })
+    const order = {
+      TableId: 5,
+    }
+    await chai.request(app)
+      .post('/api/orders')
+      .set('Accept', 'application/json')
+      .send(order)
+    const updatedorder = {
+      TableId: 3,
+    }
 
-  // it('It should not delete a order with invalid id', (done) => {
-  //   const order = {
-  //     TableId: '1',
-  //   }
-  //   chai.request(app)
-  //     .post('/api/orders')
-  //     .set('Accept', 'application/json')
-  //     .send(order)
-  //   done()
-  //   chai.request(app)
-  //   const orderId = '777'
-  //     .delete(`/api/orders/${orderId}`)
-  //     .set('Accept', 'application/json')
-  //     .end((err, res) => {
-  //       expect(res.status).to.equal(404)
-  //       res.body.should.have.property('message')
-  //         .eql(`order with the id ${orderId} cannot be found`)
-  //       done()
-  //     })
-  // })
+    const orderId = 9999
+    const res = await chai.request(app)
+      .put(`/api/orders/${orderId}`)
+      .set('Accept', 'application/json')
+      .send(updatedorder)
 
-  // it('It should not delete a order with non-numeric id', (done) => {
-  //   const order = {
-  //     TableId: '1',
-  //   }
-  //   chai.request(app)
-  //     .post('/api/orders')
-  //     .set('Accept', 'application/json')
-  //     .send(order)
-  //   done()
-  //   chai.request(app)
-  //   const orderId = 'bbb'
-  //     .delete(`/api/orders/${orderId}`)
-  //     .set('Accept', 'application/json')
-  //     .end((err, res) => {
-  //       expect(res.status).to.equal(400)
-  //       res.body.should.have.property('message').eql('Please provide a numeric value')
-  //       done()
-  //     })
-  // })
+    expect(res.status).to.equal(404)
+    res.body.should.have.property('message')
+      .eql(`Cannot find Order with the id: ${orderId}`)
+  })
+
+  it('It should not update a order with non-numeric id value', async () => {
+    const table = {
+      number: "5"
+    }
+    await chai.request(app)
+      .post('/api/tables')
+      .set('Accept', 'application/json')
+      .send(table)
+
+    const order = {
+      TableId: 1,
+    }
+    await chai.request(app)
+      .post('/api/orders')
+      .set('Accept', 'application/json')
+      .send(order)
+    const updatedorder = {
+      id: orderId,
+      TableId: 4,
+    }
+
+    const orderId = 'ggg'
+    const res = await chai.request(app)
+      .put(`/api/orders/${orderId}`)
+      .set('Accept', 'application/json')
+      .send(updatedorder)
+
+    expect(res.status).to.equal(400)
+    res.body.should.have.property('message')
+      .eql('Please input a valid numeric value')
+  })
+
+  it('It should delete a order', async () => {
+    const table = {
+      number: "2"
+    }
+
+    const tableResponse = await chai.request(app)
+      .post('/api/tables')
+      .set('Accept', 'application/json')
+      .send(table);
+
+    const order = {
+      TableId: tableResponse.body.data.id,
+    };
+
+    const orderResponse = await chai.request(app)
+      .post('/api/orders')
+      .set('Accept', 'application/json')
+      .send(order)
+
+    const orderId = orderResponse.body.data.id;
+
+    const res = await chai.request(app)
+      .delete(`/api/orders/${orderId}`)
+      .set('Accept', 'application/json');
+
+    expect(res.status).to.equal(200);
+
+    const getOrderResponse = await chai.request(app)
+      .get('/api/orders/' + orderId)
+      .set('Accept', 'application/json')
+      .send(order);
+
+    expect(getOrderResponse.status).to.equal(404);
+
+  })
+
+  it('It should not delete a order with invalid id', async () => {
+    const orderId = 777
+
+    const res = await chai.request(app)
+      .delete(`/api/orders/${orderId}`)
+      .set('Accept', 'application/json')
+
+    expect(res.status).to.equal(404)
+    res.body.should.have.property('message')
+      .eql(`Order with the id ${orderId} cannot be found`)
+  })
+
+  it('It should not delete a order with non-numeric id', async () => {
+
+    const orderId = 'bbb'
+    const res = await chai.request(app)
+      .delete(`/api/orders/${orderId}`)
+      .set('Accept', 'application/json')
+
+    expect(res.status).to.equal(400)
+    res.body.should.have.property('message').eql('Please provide a numeric value')
+  })
 })
