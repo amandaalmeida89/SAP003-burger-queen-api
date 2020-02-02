@@ -15,10 +15,10 @@ module.exports = {
     "logging": false,
   },
   "production": {
-    "username": "postgres",
-    "password": null,
-    "database": "burger_production",
-    "host": "db",
+    "username": process.env.DB_USERNAME,
+    "password": process.env.DB_PASS,
+    "database": process.env.DB_NAME,
+    "host": process.env.DB_HOST,
     "dialect": "postgres",
   }
 }
