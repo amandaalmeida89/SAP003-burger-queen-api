@@ -20,7 +20,6 @@ class OrderItemController {
   }
 
   static async addOrderItem(req, res) {
-    console.log("oi")
     console.log(req.body);
     if (!req.body.ProductId || !req.body.OrderId) {
       util.setError(400, 'Please provide complete details')
